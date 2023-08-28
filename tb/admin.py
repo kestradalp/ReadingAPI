@@ -3,4 +3,4 @@ from tb.models import *
 
 # Register your models here.
 
-admin.site.register([Rol, User, Teacher, Student, Course])
+admin.site.register([Rol, User, Teacher, Student, Course, Book])

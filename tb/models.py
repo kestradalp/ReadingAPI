@@ -1,5 +1,5 @@
-from django.db import models
 import uuid
+from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
@@ -30,6 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     rol = models.ForeignKey(Rol, on_delete=models.PROTECT, related_name="users", null=True)
+    photo_url = models.TextField(null=True)
 
     objects = UserManager()
 
@@ -95,11 +96,17 @@ class Course(models.Model):
 
 class Book(models.Model):
     name = models.CharField(max_length=150)
-    student = models.OneToOneField(Student, on_delete=models.PROTECT, related_name="book")
+    student = models.ForeignKey(Student, on_delete=models.PROTECT, related_name="books")
+    percentage = models.IntegerField()
+    pdf_url = models.TextField(null=True)
+    sound_url = models.TextField(null=True)
 
-    def create(self, name, student):
+    def create(self, name, student, percentage):
         self.name = name
         self.student = student
+        self.percentage = percentage
+        self.save()
+        return self
 
 
 class Lecture(models.Model):
@@ -109,3 +116,5 @@ class Lecture(models.Model):
     def create(self, book, time):
         self.book = book
         self.time_lecture = time
+        self.save()
+        return self
